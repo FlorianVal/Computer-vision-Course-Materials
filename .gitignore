@@ -1,4 +1,5 @@
 datasets/
+data/ 
 
 # LaTeX
 *.aux
@@ -42,3 +43,6 @@ Thumbs.db
 
 # Image placeholders (temporary files)
 *_placeholder.png
+
+# Generated images folder
+Lesson_1/images/generated/
