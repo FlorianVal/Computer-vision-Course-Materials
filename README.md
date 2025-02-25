@@ -51,6 +51,17 @@ pdflatex slides.tex
 
 This will create a PDF file containing the presentation slides for the lesson.
 
+## Automated PDF Builds
+
+This repository uses GitHub Actions to automatically build the PDF slides whenever changes are pushed to the repository. The workflow:
+
+1. Runs when changes are made to any `slides.tex` or `generate_illustrations.py` file
+2. Generates all necessary illustrations
+3. Compiles the LaTeX slides into PDFs
+4. Creates a new release with the compiled PDFs
+
+You can find the latest PDF versions of all slides in the [Releases](../../releases) section of this repository, without needing to build them locally.
+
 ## Course Content
 
 The course covers various topics in computer vision, including:

@@ -1,0 +1,84 @@
+name: Build and Release Slides
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'Lesson_*/slides.tex'
+      - 'Lesson_*/generate_illustrations.py'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    
+    - name: Install LaTeX
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-science
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Find lesson directories
+      id: find-lessons
+      run: |
+        echo "::set-output name=lessons::$(find . -type d -name 'Lesson_*' | sort | xargs echo)"
+    
+    - name: Build slides for each lesson
+      run: |
+        mkdir -p build
+        lessons="${{ steps.find-lessons.outputs.lessons }}"
+        for lesson in $lessons; do
+          echo "Processing $lesson"
+          
+          # Run the illustration generator
+          cd "$GITHUB_WORKSPACE"
+          python "$lesson/generate_illustrations.py"
+          
+          # Find all slides*.tex files in the lesson directory
+          cd "$lesson"
+          for tex_file in slides*.tex; do
+            if [ -f "$tex_file" ]; then
+              echo "Building $tex_file"
+              base_name=$(basename "$tex_file" .tex)
+              
+              # Build the LaTeX slides
+              pdflatex -interaction=nonstopmode "$tex_file"
+              pdflatex -interaction=nonstopmode "$tex_file"  # Run twice for references
+              
+              # Copy the output PDF to build directory
+              lesson_name=$(basename "$lesson")
+              cp "${base_name}.pdf" "$GITHUB_WORKSPACE/build/${lesson_name}_${base_name}.pdf"
+            fi
+          done
+        done
+    
+    - name: Upload PDFs as artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: slides-pdfs
+        path: build/*.pdf
+    
+    - name: Create Release
+      id: create_release
+      if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+      uses: softprops/action-gh-release@v1
+      with:
+        name: Slides Release ${{ github.sha }}
+        tag_name: release-${{ github.run_number }}
+        files: build/*.pdf
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
