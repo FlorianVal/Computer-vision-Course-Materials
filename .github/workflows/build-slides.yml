@@ -49,12 +49,15 @@ jobs:
     - name: Get Current Date
       run: echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
     
-    - name: Process LaTeX files
-      id: process-tex
+    - name: Install LaTeX
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra texlive-science
+
+    - name: Build and organize PDFs
       run: |
         mkdir -p build
         lessons="${{ steps.find-lessons.outputs.lessons }}"
-        file_list=""
         
         for lesson in $lessons; do
           lesson_name=$(basename "$lesson")
@@ -65,39 +68,13 @@ jobs:
           for tex_file in slides*.tex; do
             if [ -f "$tex_file" ]; then
               base_name=$(basename "$tex_file" .tex)
-              echo "Found TeX file: $tex_file"
+              echo "Compiling $tex_file"
               
-              # Add to the compiled list
-              echo "${lesson_name}_${base_name}" >> "$GITHUB_WORKSPACE/tex_files.txt"
-            fi
-          done
-        done
-        
-        cat "$GITHUB_WORKSPACE/tex_files.txt"
-    
-    - name: Compile LaTeX files
-      uses: xu-cheng/latex-action@v3
-      with:
-        root_file: |
-          ${{ join(fromJSON(steps.process-tex.outputs.tex_files), '.tex\n') }}
-        work_in_root_file_dir: true
-    
-    - name: Organize PDFs
-      run: |
-        mkdir -p build
-        lessons="${{ steps.find-lessons.outputs.lessons }}"
-        
-        for lesson in $lessons; do
-          lesson_name=$(basename "$lesson")
-          echo "Organizing PDFs for $lesson_name"
-          
-          cd "$GITHUB_WORKSPACE/$lesson"
-          
-          for tex_file in slides*.tex; do
-            if [ -f "$tex_file" ]; then
-              base_name=$(basename "$tex_file" .tex)
+              # Compile LaTeX twice to resolve references
+              pdflatex -interaction=nonstopmode "$tex_file"
+              pdflatex -interaction=nonstopmode "$tex_file"
               
-              # Copy the output PDF to build directory if it exists
+              # Copy the output PDF to build directory
               if [ -f "${base_name}.pdf" ]; then
                 cp "${base_name}.pdf" "$GITHUB_WORKSPACE/build/${lesson_name}_${base_name}.pdf"
                 echo "Copied ${base_name}.pdf to build/${lesson_name}_${base_name}.pdf"
