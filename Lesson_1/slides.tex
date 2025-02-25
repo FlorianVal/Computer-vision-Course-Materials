@@ -1,8 +1,12 @@
 \documentclass{beamer}
 \usepackage{animate}  % Add this package for GIF support
+\usepackage{tcolorbox} % Package pour les boîtes colorées
 
 % Thème du beamer (modifiable selon tes préférences)
 \usetheme{Frankfurt}
+
+% Afficher les numéros de pages en bas de chaque slide
+\setbeamertemplate{footline}[frame number]
 
 % Informations sur le document
 \title{Cours de Vision par Ordinateur}
@@ -36,6 +40,9 @@
         \end{column}
     \end{columns}
 \end{frame}
+
+% Section Introduction
+\section{Introduction}
 
 % Objectif du cours
 \begin{frame}
@@ -248,8 +255,16 @@
     \end{itemize}
 \end{frame}
 
-% Nouvelle section : Représentation des Images
-\section{Représentation des Images}
+% Transition vers la section sur la représentation des images
+\begin{frame}
+    \frametitle{Passons aux bases}
+    \begin{center}
+        \Huge{\textbf{Représentation Numérique des Images}}
+    \end{center}
+\end{frame}
+
+% Section sur la représentation des images avec titre raccourci
+\section{Représentation Numérique}
 
 % Slide : Qu'est-ce qu'un pixel ?
 \begin{frame}
@@ -366,8 +381,16 @@
     \end{itemize}
 \end{frame}
 
-% Section sur les méthodes classiques
-\section{Méthodes Classiques de Vision par Ordinateur}
+% Transition vers les méthodes classiques
+\begin{frame}
+    \frametitle{Techniques traditionnelles}
+    \begin{center}
+        \Huge{\textbf{Méthodes Classiques}}
+    \end{center}
+\end{frame}
+
+% Section sur les méthodes classiques avec titre raccourci
+\section{Méthodes Classiques}
 
 % Classification par seuillage de couleur
 \begin{frame}
@@ -531,8 +554,16 @@
     \end{itemize}
 \end{frame}
 
-% Section sur les convolutions
-\section{Convolutions en Vision par Ordinateur}
+% Transition vers les convolutions
+\begin{frame}
+    \frametitle{Opération fondamentale}
+    \begin{center}
+        \Huge{\textbf{Convolutions}}
+    \end{center}
+\end{frame}
+
+% Section sur les convolutions avec titre raccourci
+\section{Convolutions}
 
 % Introduction aux convolutions
 \begin{frame}
@@ -635,8 +666,16 @@
     \end{columns}
 \end{frame}
 
-% Section sur les CNN
-\section{Réseaux de Neurones Convolutifs (CNN)}
+% Transition vers les CNN
+\begin{frame}
+    \frametitle{Apprentissage des convolutions}
+    \begin{center}
+        \Huge{\textbf{Réseaux CNN}}
+    \end{center}
+\end{frame}
+
+% Section sur les CNN avec titre raccourci
+\section{Réseaux CNN}
 
 % Introduction aux CNN
 \begin{frame}
@@ -747,6 +786,24 @@
             \item Meilleures performances
         \end{itemize}
     \end{itemize}
+\end{frame}
+
+
+% Slide : GitHub et Questions
+\begin{frame}
+    \frametitle{Ressources et Questions}
+    \begin{center}
+        \textbf{\large{Retrouvez tous les supports de cours sur GitHub: }}
+        
+        \vspace{0.5cm}
+        \includegraphics[width=0.2\textwidth]{images/github.png}
+                \begin{tcolorbox}[colback=black!5!white,colframe=black!75!white,width=0.8\textwidth]
+            \centering
+            \large{\href{https://github.com/fvalade/Computer-vision-Course-Materials}{\textcolor{blue}{github.com/fvalade/Computer-vision-Course-Materials}}}
+        \end{tcolorbox}
+        
+        \huge{\textbf{Des questions ?}}
+    \end{center}
 \end{frame}
 
 \end{document}
