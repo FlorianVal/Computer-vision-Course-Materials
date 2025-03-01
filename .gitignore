@@ -2,6 +2,7 @@ datasets/
 data/ 
 
 # LaTeX
+*.key
 *.aux
 *.log
 *.nav
