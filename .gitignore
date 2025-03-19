@@ -1,6 +1,7 @@
 datasets/
 data/ 
-
+*.pth
+*.pt
 # LaTeX
 *.key
 *.aux
